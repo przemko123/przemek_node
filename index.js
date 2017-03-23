@@ -7,67 +7,42 @@ var url = 'mongodb://localhost:27017/myproject';
 
 app.use(bodyParser.json());
 
+var connectionPromis = MongoClient.connect(url);
+var collectionPromis = connectionPromis.then(function (db) {
+  return db.collection('book');
+});
+
 app.get('/', function (req, res) {
   res.send('Hello World!')
-
-  // MongoClient.connect(url, function (err, db) {
-  //   console.log("Connected successfully to server");
-  //   var book = db.collection('book');
-  //   var bookArray = book.find({}).toArray(
-  //     function(err, bookArray) {
-  //       res.send(bookArray);
-  //     }
-  //   );
-  //   // console.log(bookArray);
-
-  //   db.close()
-  // });
 })
 
 app.get('/stock', function (req, res) {
-  // res.send('Hello World!')
-
-  MongoClient.connect(url, function (err, db) {
-    console.log("Connected successfully to server");
-    var book = db.collection('book');
-    var bookArray = book.find({}).toArray(
-      function (err, bookArray) {
-        res.send(bookArray);
-      }
-    );
-    // console.log(bookArray);
-
-    db.close()
+  collectionPromis.then(function (collection) {
+    return collection.find({}).toArray();
+  }).then(function (bookArray) {
+    res.send(bookArray);
   });
 })
 
 app.post('/stock', function (req, res, next) {
-
-  MongoClient.connect(url, function (err, db) {
-    console.log("Connected stock");
-    db.collection('book')
-      .insertOne(req.body)
-
-    db.close()
+  collectionPromis.then(function (collection) {
+    return collection.insertOne(req.body)
+  }).then(function () {
+    res.json({
+      isbn: req.body.isbn,
+      count: req.body.count
+    })
   });
-  res.json({
-    isbn: req.body.isbn,
-    count: req.body.count
-  })
 })
 app.put('/stock', function (req, res, next) {
-
-  MongoClient.connect(url, function (err, db) {
-    console.log("Connected put stock");
-    db.collection('book')
-      .updateOne({ isbn: req.body.isbn }, req.body)
-
-    db.close()
+  collectionPromis.then(function (collection) {
+    return collection.updateOne({ isbn: req.body.isbn }, req.body)
+  }).then(function () {
+    res.json({
+      isbn: req.body.isbn,
+      count: req.body.count
+    })
   });
-  res.json({
-    isbn: req.body.isbn,
-    count: req.body.count
-  })
 })
 
 app.get('/error', function (req, res) {
