@@ -16,12 +16,12 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-app.get('/stock', function (req, res) {
+app.get('/stock', function (req, res, next) {
   collectionPromis.then(function (collection) {
     return collection.find({}).toArray();
   }).then(function (bookArray) {
     res.send(bookArray);
-  });
+  }).catch(next);
 })
 
 app.post('/stock', function (req, res, next) {
@@ -32,7 +32,7 @@ app.post('/stock', function (req, res, next) {
       isbn: req.body.isbn,
       count: req.body.count
     })
-  });
+  }).catch(next);
 })
 app.put('/stock', function (req, res, next) {
   collectionPromis.then(function (collection) {
@@ -42,7 +42,7 @@ app.put('/stock', function (req, res, next) {
       isbn: req.body.isbn,
       count: req.body.count
     })
-  });
+  }).catch(next);
 })
 
 app.get('/error', function (req, res) {
