@@ -7,47 +7,50 @@ var url = 'mongodb://localhost:27017/myproject';
 
 app.use(bodyParser.json());
 
-var connectionPromis = MongoClient.connect(url);
+var connectionPromis = MongoClient.connect(url, {
+    bufferMaxEntries: 0
+});
 var collectionPromis = connectionPromis.then(function (db) {
-  return db.collection('book');
+    return db.collection('book');
 });
 
 app.get('/', function (req, res) {
-  res.send('Hello World!')
+    res.send('Hello World!')
 })
 
 app.get('/stock', function (req, res, next) {
-  collectionPromis.then(function (collection) {
-    return collection.find({}).toArray();
-  }).then(function (bookArray) {
-    res.send(bookArray);
-  }).catch(next);
+    collectionPromis.then(function (collection) {
+        return collection.find({}).toArray();
+    }).then(function (bookArray) {
+        res.send(bookArray);
+    }).catch(next);
 })
 
 app.post('/stock', function (req, res, next) {
-  collectionPromis.then(function (collection) {
-    return collection.insertOne(req.body)
-  }).then(function () {
-    res.json({
-      isbn: req.body.isbn,
-      count: req.body.count
-    })
-  }).catch(next);
+    collectionPromis.then(function (collection) {
+        return collection.insertOne(req.body)
+    }).then(function () {
+        res.json({
+            isbn: req.body.isbn,
+            count: req.body.count
+        })
+    }).catch(next);
 })
+
 app.put('/stock', function (req, res, next) {
-  collectionPromis.then(function (collection) {
-    return collection.updateOne({ isbn: req.body.isbn }, req.body)
-  }).then(function () {
-    res.json({
-      isbn: req.body.isbn,
-      count: req.body.count
-    })
-  }).catch(next);
+    collectionPromis.then(function (collection) {
+        return collection.updateOne({ isbn: req.body.isbn }, req.body)
+    }).then(function () {
+        res.json({
+            isbn: req.body.isbn,
+            count: req.body.count
+        })
+    }).catch(next);
 })
 
 app.get('/error', function (req, res) {
-  // res.send('Hello World!')
-  throw new Error('forced error');
+    // res.send('Hello World!')
+    throw new Error('forced error');
 })
 
 // app.get('**', function (req, res, next) {
@@ -57,19 +60,19 @@ app.get('/error', function (req, res) {
 //   res.send('Hello World!')
 // })
 app.use(function (req, res, next) {
-  // console.error("asdfasdf");
-  // res.status(404).send("Somefing 404 ");
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    // console.error("asdfasdf");
+    // res.status(404).send("Somefing 404 ");
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 
 app.use(function (err, req, res, next) {
-  var status = err.status || 500;
-  res.status(status);
-  console.error(err.stack);
-  res.send('Oh no: ' + status);
+    var status = err.status || 500;
+    res.status(status);
+    console.error(err.stack);
+    res.send('Oh no: ' + status);
 });
 // function logRequest(req, res, next) {
 //   console.log('incoming request', new Date());
