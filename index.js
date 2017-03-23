@@ -1,35 +1,23 @@
 var express = require('express')
 var bodyParser = require('body-parser');
 var app = express()
-var MongoClient = require('mongodb').MongoClient;
-
-var url = 'mongodb://localhost:27017/myproject';
+var {getStock, postStock, putStock} = require("./stockRepository")
 
 app.use(bodyParser.json());
 
-var connectionPromis = MongoClient.connect(url, {
-    bufferMaxEntries: 0
-});
-var collectionPromis = connectionPromis.then(function (db) {
-    return db.collection('book');
-});
 
 app.get('/', function (req, res) {
     res.send('Hello World!')
 })
 
 app.get('/stock', function (req, res, next) {
-    collectionPromis.then(function (collection) {
-        return collection.find({}).toArray();
-    }).then(function (bookArray) {
+    getStock().then(function (bookArray) {
         res.send(bookArray);
     }).catch(next);
 })
 
 app.post('/stock', function (req, res, next) {
-    collectionPromis.then(function (collection) {
-        return collection.insertOne(req.body)
-    }).then(function () {
+    postStock(req.body).then(function () {
         res.json({
             isbn: req.body.isbn,
             count: req.body.count
@@ -38,9 +26,7 @@ app.post('/stock', function (req, res, next) {
 })
 
 app.put('/stock', function (req, res, next) {
-    collectionPromis.then(function (collection) {
-        return collection.updateOne({ isbn: req.body.isbn }, req.body)
-    }).then(function () {
+    putStock(req.body).then(function () {
         res.json({
             isbn: req.body.isbn,
             count: req.body.count
