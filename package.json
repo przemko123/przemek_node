@@ -5,13 +5,15 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "mocha"
+    "test": "mocha",
+    "mongo": "mongod --dbpath=./data"
   },
   "author": "Przemek",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.1",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "mongodb": "^2.2.25"
   },
   "devDependencies": {
     "mocha": "^3.2.0",
