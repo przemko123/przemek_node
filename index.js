@@ -41,11 +41,6 @@ app.use(function (err, req, res, next) {
   console.error(err.stack);
   res.send('Oh no: ' + status);
 });
-
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
-})
-
 // function logRequest(req, res, next) {
 //   console.log('incoming request', new Date());
 //   next();
@@ -62,3 +57,4 @@ app.listen(3000, function () {
 //   console.error(err.stack);
 //   res.status(500).send("Somefing broke!");
 // });
+module.exports = app;
