@@ -1,7 +1,7 @@
 var express = require('express')
 var bodyParser = require('body-parser');
 var app = express()
-var {getStock, postStock, putStock} = require("./stockRepository")
+var {getStock, getStockByISBN, postStock, putStock} = require("./stockRepository")
 
 app.use(bodyParser.json());
 
@@ -13,6 +13,18 @@ app.get('/', function (req, res) {
 app.get('/stock', function (req, res, next) {
     getStock().then(function (bookArray) {
         res.send(bookArray);
+    }).catch(next);
+})
+
+app.get('/stock/:isbn', function (req, res, next) {
+    var isbn = req.params['isbn'];
+    getStockByISBN(isbn).then(function (bookArray) {
+        if (bookArray) {
+        res.send(bookArray);
+
+        } else {
+            res.status(404).send("asdf asdfa asdf");
+        }
     }).catch(next);
 })
 

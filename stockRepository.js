@@ -16,6 +16,12 @@ function getStock() {
     });
 }
 
+function getStockByISBN(isbn) {
+    return collectionPromis.then(function (collection) {
+        return collection.find({ isbn }).limit(1).next();
+    });
+}
+
 function postStock(value) {
     return collectionPromis.then(function (collection) {
         return collection.insertOne(value)
@@ -28,4 +34,4 @@ function putStock(value) {
     });
 }
 
-module.exports = {getStock, postStock, putStock};
+module.exports = {getStock, getStockByISBN, postStock, putStock};
