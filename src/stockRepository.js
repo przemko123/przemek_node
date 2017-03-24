@@ -1,13 +1,13 @@
 var MongoClient = require('mongodb').MongoClient;
 
-var url = 'mongodb://localhost:27017/myproject';
+var url = process.env.MONGODB_URI || 'mongodb://localhost:27017/myproject';
 
 var connectionPromis = MongoClient.connect(url, {
     bufferMaxEntries: 0
 });
 
 var collectionPromis = connectionPromis.then(function (db) {
-    return db.collection('book');
+    return db.collection('book-przemek');
 });
 
 function getStock() {
