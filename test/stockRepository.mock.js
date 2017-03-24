@@ -5,7 +5,20 @@ module.exports = function() {
         _items: function(state) {
             items = state;
         },
-        stockUp: function (isbn, count) {
+        postStock: function (value) {
+            // var updated = false;
+            // items.forEach(function(item) {
+            //     if(item.isbn === isbn) {
+            //         item.count = count;
+            //         updated = true;
+            //     }
+            // });
+            // if(!updated) {
+                items.push(value);
+            // }
+            return Promise.resolve();
+        },
+        putStock: function (isbn, count) {
             var updated = false;
             items.forEach(function(item) {
                 if(item.isbn === isbn) {
@@ -18,10 +31,10 @@ module.exports = function() {
             }
             return Promise.resolve();
         },
-        findAll: function () {
+        getStock: function () {
             return Promise.resolve(items);
         },
-        getCount: function (isbn) {
+        getStockByISBN: function (isbn) {
             var foundItemCount = null;
             items.forEach(function(item) {
                 if(item.isbn === isbn) {

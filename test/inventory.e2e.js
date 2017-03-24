@@ -1,5 +1,7 @@
 const request = require('supertest');
-const app = require('../src/index');
+var stockRepository = require("./stockRepository.mock")()
+
+const app = require('../src/index')(stockRepository);
 
 describe('Book inventory', function () {
     it('asdf asdf asdf asdf', function (done) {

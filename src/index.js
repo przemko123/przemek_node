@@ -1,10 +1,9 @@
 var express = require('express')
 var bodyParser = require('body-parser');
 var app = express()
-var {getStock, getStockByISBN, postStock, putStock} = require("./stockRepository")
+var getStock, getStockByISBN, postStock, putStock;
 
 app.use(bodyParser.json());
-
 
 app.get('/', function (req, res) {
     res.send('Hello World!')
@@ -88,4 +87,10 @@ app.use(function (err, req, res, next) {
 //   console.error(err.stack);
 //   res.status(500).send("Somefing broke!");
 // });
-module.exports = app;
+module.exports = function(stockRepository){
+    getStock = stockRepository.getStock;
+    getStockByISBN = stockRepository.getStockByISBN;
+    postStock = stockRepository.postStock;
+    putStock = stockRepository.putStock;
+    return app;
+};
