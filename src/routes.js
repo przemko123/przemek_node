@@ -6,15 +6,15 @@ module.exports = function (stockRepository) {
     var putStock = stockRepository.putStock;
 
     return {
-        hello: function (req, res) {
+        hello(req, res) {
             res.send('Hello World!');
         },
-        getStock: function (req, res, next) {
+        getStock(req, res, next) {
             getStock().then(function (bookArray) {
                 res.send(bookArray);
             }).catch(next);
         },
-        getStockByISBN: function (req, res, next) {
+        getStockByISBN(req, res, next) {
             var isbn = req.params['isbn'];
             getStockByISBN(isbn).then(function (bookArray) {
                 if (bookArray) {
@@ -25,7 +25,7 @@ module.exports = function (stockRepository) {
                 }
             }).catch(next);
         },
-        postStock: function (req, res, next) {
+        postStock(req, res, next) {
             postStock(req.body).then(function () {
                 res.json({
                     isbn: req.body.isbn,
@@ -33,7 +33,7 @@ module.exports = function (stockRepository) {
                 })
             }).catch(next);
         },
-        putStock: function (req, res, next) {
+        putStock(req, res, next) {
             putStock(req.body).then(function () {
                 res.json({
                     isbn: req.body.isbn,
